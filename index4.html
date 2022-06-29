@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      .container {
+        width: 600px;
+        text-align: center;
+      }
+      .discount-container {
+        text-align: end;
+      }
+    </style>
+    <div class="container">
+      <div class="fistheading">
+        <h1>Pizza ABC</h1>
+        <p>We are currently serving</p>
+        <div class="buttondiv">
+          <button class="minus">-</button>
+          <input type="text" id="qty" value="0" readonly />
+          <button class="plus">+</button>
+          <checkbox check="" />
+        </div>
+      </div>
+      <div class="totalamt"></div>
+      <div class="discount-container">
+        Discount
+        <input type="text" id="customdisc" maxlength="2" disabled />
+      </div>
+      <div class="discount-container"><span id="topay"></span></div>
+    </div>
+  </body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+  $(document).ready(function () {
+    var pizzaprice = 50
+    var totalprice = 0
+    var discount = 0
+    $('.minus').click(function () {
+      var quantity = parseInt($('#qty').val())
+      if (quantity != 0) {
+        let dec = quantity - 1
+        let price = $('#qty').val(dec)
+        totalprice = parseInt(pizzaprice * dec)
+        $('.totalamt').html('Total ' + '$' + totalprice)
+        if (dec != 0) {
+          $('#customdisc').removeAttr('disabled')
+          calculatedisc(totalprice)
+        } else {
+          $('#customdisc').attr('disabled', 'disabled')
+          $('#customdisc').val('')
+          $('#topay').html('')
+        }
+      }
+    })
+    $('.plus').click(function () {
+      let quantity = parseInt($('#qty').val())
+      let inc = quantity + 1
+      $('#qty').val(inc)
+      totalprice = parseInt(pizzaprice * inc)
+      $('.totalamt').html('Total ' + '$' + totalprice)
+      $('#customdisc').removeAttr('disabled')
+      calculatedisc(totalprice)
+    })
+    $('#customdisc').keypress(function (e) {
+      let charCode = e.which ? e.which : event.keyCode
+
+      if (String.fromCharCode(charCode).match(/[^0-9]/g)) {
+        return false
+      }
+    })
+    $('#customdisc').blur(function () {
+      console.log('call uuu')
+      calculatedisc(totalprice)
+    })
+    function calculatedisc(totalprice) {
+      var disc = $('#customdisc').val()
+
+      if (disc != '' && disc != 0) {
+        var dec = (disc / 100).toFixed(2)
+        console.log(dec)
+        var mult = totalprice * dec
+        console.log(mult)
+        console.log(totalprice)
+        var discont = totalprice - mult
+        console.log(discont)
+        $('#topay').html('To Pay ' + '$' + discont.toFixed(2))
+      }
+      if (disc == 0) {
+        $('#topay').html('')
+      }
+    }
+  })
+</script>
